@@ -1,37 +1,32 @@
-class Usuario {
-    constructor(nombre, apellido){
-        this.nombre = nombre;
-        this.apellido = apellido;
-        this.libros = [];
-        this.mascotas = [];
-    }
-    getFullName(){
-        return `${this.nombre} ${this.apellido}`;
-    }
-    addMascota(mascota){
-        this.mascotas.push(mascota);
-    }
-    countMascotas(){
-        return this.mascotas.length;
-    }
-    addBook(nombre, autor){
-        this.libros.push({nombre: nombre, autor: autor});
-    }
-    getBookNames(){
-        return this.libros.map(libro => libro.nombre);
-    }
-}
+const {Contenedor} = require('./Classes.js');
+(async () => {
+    const producto1 = new Contenedor('productos.txt');
 
-const usuario = new Usuario("Alex", "Cornejo");
-console.log(usuario.getFullName());
+    console.log(await producto1.save(
+        {
+            title: "Monitor", 
+            price: 50000, 
+            thumbnail: 'https://www.fullh4rd.com.ar/img/productos/Pics_Prod/monitor-24-lg-gamer-24gn600b-144hz-0.jpg'
+        }
+    ));
 
-usuario.addMascota("Perro");
-usuario.addMascota("Gato");
-usuario.addMascota("Gato");
-console.log(usuario.countMascotas());
+    console.log(await producto1.save(
+        {
+            title: "Teclado redragon", 
+            price: 12000, 
+            thumbnail: 'https://www.newmaster.com.ar/wp-content/uploads/2020/01/K552W-RGB-SP-1.jpg'
+        }
+    ));
+    // Obtenemos por id y lo mostramos
+    console.log(await producto1.getById(1));
 
-usuario.addBook("El señor de los anillos", "J.R.R. Tolkien");
-usuario.addBook("Cien años de soledad", "Gabriel García Márquez");
-usuario.addBook("Cuentos de amor de locura y de muerte", "Horacio Quiroga");
+    // Obtenemos todos los productos
+    const productos = await producto1.getAll();
+    console.log(productos);
 
-console.log(usuario.getBookNames());
+    // Eliminamos un producto por id
+    await producto1.deleteById(1);
+
+    // Eliminamos todos los productos
+    // await producto1.deleteAll();
+})();
