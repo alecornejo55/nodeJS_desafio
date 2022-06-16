@@ -1,24 +1,19 @@
 {
-  "dependencies": {
-    "express": "^4.18.1"
-  },
-  "name": "entregable3",
-  "description": "",
+  "name": "entregable4",
   "version": "1.0.0",
+  "description": "",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alecornejo55/nodeJS_desafio.git"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/alecornejo55/nodeJS_desafio/issues"
+  "dependencies": {
+    "express": "^4.18.1"
   },
-  "homepage": "https://github.com/alecornejo55/nodeJS_desafio#readme"
+  "devDependencies": {
+    "nodemon": "^2.0.16"
+  }
 }

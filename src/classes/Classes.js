@@ -36,7 +36,25 @@ class Contenedor {
             return null;
         }
     }
-
+    async updateById(id, data){
+        const arrData = await this.getAll();
+        try {
+            const refProd = arrData.findIndex(item => item.id == id);
+            if(refProd < 0){
+                throw new Error('No existe el id seleccionado');
+            }
+            arrData[refProd].title = data.title;
+            arrData[refProd].price = data.price;
+            arrData[refProd].thumbnail = data.thumbnail;
+            console.log("Producto", arrData);
+            await fs.promises.writeFile(this.nombre_archivo, JSON.stringify(arrData));
+            return arrData[refProd];
+        }
+        catch (error) {
+            console.warn(`Error al obtener: ${error.message}`);
+            return null;
+        }
+    }
     async getAll(){
         try {
             let data = await fs.promises.readFile(this.nombre_archivo, 'utf8');

@@ -1,41 +1,20 @@
-const {Contenedor} = require('./Classes.js');
-const {app} = require('./Utils.js');
-(async () => {
-    const producto1 = new Contenedor('productos.txt');
-    // Elimino todos los productos antes de empezar
-    await producto1.deleteAll();
+const express = require('express');
+const app = express();
+const path = require('path');
 
-    // Guardo productos
-    await producto1.save(
-        {
-            title: "Monitor", 
-            price: 50000, 
-            thumbnail: 'https://www.fullh4rd.com.ar/img/productos/Pics_Prod/monitor-24-lg-gamer-24gn600b-144hz-0.jpg'
-        }
-    );
-    await producto1.save(
-        {
-            title: "Teclado redragon", 
-            price: 12000, 
-            thumbnail: 'https://www.newmaster.com.ar/wp-content/uploads/2020/01/K552W-RGB-SP-1.jpg'
-        }
-    );
-    await producto1.save(
-        {
-            title: "Silla  Dxracer", 
-            price: 70000, 
-            thumbnail: 'https://www.dxracer.com.ar/media/catalog/product/cache/1/image/1800x/040ec09b1e35df139433887a97daa66f/g/c/gc-p132-bw-fx1-002_1.jpg'
-        }
-    );
+const PORT = 8080;
+const indexRouter = require('./src/routes/indexRouter');
+const productosRouter = require('./src/routes/productosRouter');
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname,'src/public')));
+console.log(path.join(__dirname,'src/public'));
+// console.clear();
+app.use('/', indexRouter);
+app.use('/api/productos', productosRouter);
 
-    // Obtenemos todos los productos
-    const productos = await producto1.getAll();
-    console.log(productos);
-    app.get('/productos', (req, res) => {
-        res.send(productos);
-    });
-    app.get('/productoRandom', (req, res) => {
-        const random = Math.floor(Math.random() * productos.length);
-        res.send(productos[random]);
-    });
-})(); 
+// Conexión al puerto
+const server = app.listen(PORT, () => {
+    console.log(`Servidor escuchando en el puerto ${server.address().port}`);
+});
+server.on('error', error => console.log(`Error en el servidor: ${error}`));
