@@ -16,11 +16,11 @@ form.addEventListener('submit', async (e) => {
             },
             body: JSON.stringify(newProducto)
         }
-        const result = await fetch('/api/productos', options);
+        const result = await fetch('/productos', options);
         const data = await result.json();
         Swal.fire(
             'Producto guardado',
-            `El producto con el id ${data.id} ha sido guardado con éxito`,
+            `El producto ha sido agregado con éxito`,
             'success'
         );
     }

@@ -1,17 +1,19 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-
 const PORT = 8080;
-const indexRouter = require('./src/routes/indexRouter');
-const productosRouter = require('./src/routes/productosRouter');
+const productosRouter = require('./routes/productosRouter');
+const { engine } = require('express-handlebars');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname,'src/public')));
-console.log(path.join(__dirname,'src/public'));
-// console.clear();
-app.use('/', indexRouter);
-app.use('/api/productos', productosRouter);
+
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './views');
+
+app.use('/', productosRouter);
+
+app.use(express.static(__dirname + "/public"));
 
 // Conexión al puerto
 const server = app.listen(PORT, () => {
