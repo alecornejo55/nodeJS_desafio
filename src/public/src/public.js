@@ -53,8 +53,15 @@ formChat.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(formChat);
     const newProducto = {
-        email: formData.get('email'),
-        message: formData.get('message'),
+        author: {
+            id: formData.get('email'),
+            nombre: formData.get('nombre'),
+            apellido: formData.get('apellido'),
+            edad: formData.get('edad'),
+            alias: formData.get('alias'),
+            avatar: formData.get('avatar'),
+        },
+        text:  formData.get('message'),
         // dateTime: new Date().toLocaleString("es-AR"),
     };
     console.log(newProducto);
@@ -74,4 +81,19 @@ formChat.addEventListener('submit', async (e) => {
 
 // Cliente
 socket.on('productos', data => { renderProductos(data); });
-socket.on('messages', data => { renderChat(data); });
+socket.on('messages', data => { 
+    const authorSchema = new normalizr.schema.Entity('authors')
+    const messageSchema = new normalizr.schema.Entity('mensajes', {
+      author: authorSchema,
+    },{idAttribute:'_id'})
+    const global = new normalizr.schema.Entity('global', {
+      messages: [messageSchema],
+    })
+    const dataDeno = normalizr.denormalize(data.result,global,data.entities);
+
+    const totData = JSON.stringify(data).length * 100;
+    const totDataDeno = JSON.stringify(dataDeno).length;
+    const porcentajeReduccion = Math.floor(100 - totData/totDataDeno);
+    document.getElementById('porcentaje').innerHTML = `Compresión: ${porcentajeReduccion}%`;
+    renderChat(dataDeno.messages);
+});

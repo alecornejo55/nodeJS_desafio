@@ -5,19 +5,23 @@ const { Server: HttpServer } = require('http')
 const { Server: IOServer } = require('socket.io')
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
-// Importamos datos de conexiones
-const { options: optMDB } = require('./options/mariaDB.js');
-const { options: optLite } = require('./options/sqlite3.js');
+const testRoute = require('./src/routes/test');
+const indexRoute = require('./src/routes/index');
+const Normalizador = require('./src/models/normalizador');
+const normalizer = new Normalizador();
 
-const { Contenedor } = require('./classes/ClassesDB.js');
-const producto = new Contenedor(optMDB, 'productos');
-const chat = new Contenedor(optLite, 'mensajes');
+// Importamos datos de conexiones
+const { ProductDaoMongo } = require('./src/daos/productos/ProductoDaoMongo');
+const { ChatDaoMongo } = require('./src/daos/chat/ChatDaoMongo');
+
+const chat = new ChatDaoMongo();
+const producto = new ProductDaoMongo();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.set('views', './views');
-app.use(express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/src/public"));
 
 io.on('connection', async (socket) => {
     console.log('Un cliente se ha conectado');
@@ -25,7 +29,9 @@ io.on('connection', async (socket) => {
     socket.emit('productos', productos);
 
     const messages = await chat.getAll();
-    socket.emit('messages', messages);
+    const data = normalizer.getDataNormalized(messages);
+    // console.log("data", data, "FIN");
+    socket.emit('messages', data);
 
     socket.on('new-producto', async (data) => {
         const idNuevoProducto = await producto.save(data);
@@ -39,7 +45,8 @@ io.on('connection', async (socket) => {
     });
 
 });
-
+app.use('/api/productos-test', testRoute);
+app.use('/test', indexRoute);
 
 // Conexión al puerto
 const server = httpServer.listen(PORT, () => {
