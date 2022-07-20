@@ -30,20 +30,20 @@ class Normalizador {
         // const dataNormalized = normalize(data, global)
         
 
-        console.log("----------OBJETO ORIGINAL----------");
+        // console.log("----------OBJETO ORIGINAL----------");
         // this.print(data);
-        console.log(JSON.stringify(data).length);
+        // console.log(JSON.stringify(data).length);
         
-        console.log("----------OBJETO NORMALIZADO----------");
+        // console.log("----------OBJETO NORMALIZADO----------");
         // const normalizedData = normalize(data, chat);
         const dataNormalized = normalize(data, global)
         // this.print(dataNormalized);
-        console.log(JSON.stringify(dataNormalized).length);
+        // console.log(JSON.stringify(dataNormalized).length);
 
-        console.log("----------OBJETO DENORMALIZADO----------");
+        // console.log("----------OBJETO DENORMALIZADO----------");
         const denormalizedData = denormalize(dataNormalized.result, global, dataNormalized.entities);
-        this.print(denormalizedData);
-        console.log(JSON.stringify(denormalizedData).length);
+        // this.print(denormalizedData);
+        // console.log(JSON.stringify(denormalizedData).length);
         
         return dataNormalized;
 

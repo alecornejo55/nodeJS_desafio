@@ -81,6 +81,11 @@ formChat.addEventListener('submit', async (e) => {
 
 // Cliente
 socket.on('productos', data => { renderProductos(data); });
+socket.on('user', data => {
+    document.querySelector('#userData').innerHTML = `
+        ¡Bienvenido ${data}!
+    `;
+});
 socket.on('messages', data => { 
     const authorSchema = new normalizr.schema.Entity('authors')
     const messageSchema = new normalizr.schema.Entity('mensajes', {
